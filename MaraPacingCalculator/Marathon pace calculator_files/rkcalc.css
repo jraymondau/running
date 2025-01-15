@@ -1,0 +1,150 @@
+H1.white      {font-size: 24pt;
+              font-weight: bold;
+              text-align: left;
+              color: white;
+              text-decoration: underline}
+              
+P.black       {font-size: 12pt;
+              font-weight: normal;
+              align: left;
+              color: black}
+
+P.black2      {font-size: 14pt;
+              font-weight: normal;
+              text-align: center;
+              color: black}
+
+P.sans1       {font-family: sans-serif;
+              font-size: 12pt;
+              font-weight: normal;
+              text-align: left;
+              color: black}
+
+P.sans2       {font-family: sans-serif;
+              font-size: 12pt;
+              font-weight: bold;
+              text-align: left;
+              color: black}
+
+P.sans3       {font-family: sans-serif;
+              font-size: 14pt;
+              font-weight: bold;
+              text-align: center;
+              color: black;
+              text-decoration: underline}
+
+P.sans4       {font-family: sans-serif;
+              font-size: 16pt;
+              font-weight: bold;
+              text-align: center;
+              color: black}
+
+TD.sans1      {font-family: sans-serif;
+              font-size: 12pt;
+              font-weight: normal;
+              text-align: left;
+              color: black}
+
+TD.sans2      {font-family: sans-serif;
+              font-size: 12pt;
+              font-weight: bold;
+              text-align: left;
+              color: black}
+
+P.maroon1     {color: maroon;
+              font-family: sans-serif;
+              font-weight: bold;
+              font-size: 9pt}
+
+P.marhed1     {color: white;
+              font-size: 36pt;
+              font-family: sans-serif;
+              font-style: italic;
+              font-weight: bold;
+              margin-left: 10;
+              margin-top: 5;
+              margin-right: 0}
+
+P.marhed2     {color: white;
+              font-size: 16pt;
+              font-family: sans-serif;
+              font-style: italic;
+              font-weight: bold}
+
+P.marhed3     {color: white;
+              font-size:12pt;
+              font-family: sans-serif;
+              font-style: italic;
+              font-weight: bold;
+              margin-left: 10;
+              text-decoration: underline}
+
+TD.silver     {background-color: silver;
+              text-align: center;
+              font-family: sans-serif;
+              font-size: 9pt;
+              font-weight: bold}
+
+TD.bluey      {background-color: #60CEC4;
+              color: black;
+              font-weight: bold;
+              font-family: sans-serif}
+
+TD.orange     {background-color: orange;
+              color: white;
+              font-weight: bold;
+              font-family: sans-serif}
+
+TD.purply     {background-color: #B69C87;
+              color: black;
+              font-weight: bold;
+              font-family: sans-serif}
+
+TD.reverse    {background: teal;
+              background-color: teal;
+              color: aqua;
+              text-align: center;
+              font-family: sans-serif;
+              font-size: 9pt;
+              font-weight: bold}
+
+TD.output     {background-color: white;
+              font-size: 9pt;
+              font-family: sans-serif;
+              font-weight: normal}
+
+TD.input      {font-family: sans-serif;
+              font-size: 10pt;
+              font-weight: normal}
+
+A.mail        {font-family: serif;
+              color: black;
+              font-size: 11pt;
+              font-weight: bold}
+
+
+
+
+
+
+
+/*
+     FILE ARCHIVED ON 12:36:59 Jan 13, 2016 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 10:57:40 Aug 30, 2024.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  captures_list: 0.459
+  exclusion.robots: 0.017
+  exclusion.robots.policy: 0.007
+  esindex: 0.01
+  cdx.remote: 8.432
+  LoadShardBlock: 94.383 (3)
+  PetaboxLoader3.datanode: 96.516 (4)
+  PetaboxLoader3.resolve: 161.072 (2)
+  load_resource: 213.138
+*/

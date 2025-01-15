@@ -1,0 +1,668 @@
+
+<!-- saved from url=(0086)http://web.archive.org/web/20160119184017/http://www.users.on.net/~klima/rkcalc_km.htm -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<link rel="stylesheet" type="text/css" href="./Marathon pace calculator_files/banner-styles.css">
+<link rel="stylesheet" type="text/css" href="./Marathon pace calculator_files/iconochive.css">
+<!-- End Wayback Rewrite JS Include -->
+
+<link href="./Marathon pace calculator_files/rkcalc.css" rel="stylesheet" type="text/css">
+<meta name="AUTHOR" content="Rob Klima">
+<meta name="DESCRIPTION" content="A marathon pace calculator that allows adjustment for fade">
+<meta name="KEYWORDS" content="marathon, pace, calculator, race, splits, km, kilometre,
+                             kilometer, mile, half marathon, halfmarathon, half-marathon,
+                             speed, endurance, running, run, runner, fitness, training,
+                             timing, olympic"> 
+<script language="JavaScript">
+<!-- hide script
+
+          /*   *********************************************************
+               *                                                       *
+               *            Copyright Rob Klima, 1999                  *
+               *                                                       *
+               *********************************************************
+          */ 
+
+// global variables
+ 
+  var RadioAnswer = 0;
+  var TotalSeconds = 0;
+  var PreFadePercentage = 100, PostFadePercentage = 0;
+  var PercentageUnits = 0, SecondUnits = 0;
+  var PreFadeUnits = 0, PostFadeUnits = 0;
+  var DistanceUnits = 0, SecondUnits = 0;
+  var AverageSeconds = 0;
+  var PreFadeSecs = 0, PostFadeSecs = 0;
+  var KmAdd = 0;
+  var x = 0, y = 0, i = 0;
+  var RoundSeconds = 0;
+  var ExtraLong = 0, ExtraPointTwo = 0;
+  var TestMinutes = 0, TestHours = 0, TestSeconds = 0;
+  var MinuteFloor = 0, HourFloor = 0, SecondFloor = 0;
+  var FinalMinutes = 0;
+  var ConvertResult = 0;
+  var SecondColon = "", MinuteColon = "";
+  var HalfSplit = 0, HalfLong = 0;
+  var PreConvert = 0, PostConvert = 0;
+  var TheResult = 0;
+
+function ConvertSeconds(SecondsIn)
+  {
+  var TestMinutes = 0, TestSeconds = 0, TestHours = 0;
+  var MinuteFloor = 0, HourFloor = 0, FinalMinutes = 0;
+  var FinalConversion = 0;
+  var SecondColon, MinuteColon = "";
+
+  SecondColon = ":";
+  MinuteColon = ":";
+
+  TestMinutes = SecondsIn / 60;
+  MinuteFloor = Math.floor(TestMinutes);
+  TestSeconds = Math.round((TestMinutes - MinuteFloor) * 60);
+  if (TestSeconds == 60)
+    {
+    TestSeconds = 0;
+    MinuteFloor = MinuteFloor + 1;
+    }
+  if (TestSeconds < 10)
+    {
+    SecondColon = ":0";
+    }
+  TestHours = MinuteFloor / 60;
+  HourFloor = Math.floor(TestHours);
+  FinalMinutes = Math.round((TestHours - HourFloor) * 60);
+  if (FinalMinutes < 10)
+    {
+    MinuteColon = ":0";
+    }
+  FinalConversion = HourFloor + MinuteColon + FinalMinutes + SecondColon + TestSeconds;
+  return FinalConversion;
+  }
+
+
+function CalculateKmSeconds()
+  {
+  var HoursIn = document.calculator.TargetHours.value-0;
+  var MinutesIn = document.calculator.TargetMinutes.value-0;
+  var FadeDistance = document.calculator.FadeFrom.value-0;
+  var FadeSecondsIn = document.calculator.TargetFade.value-0;
+
+  var FadeDeduction = 0, SecondsDeducted = 0, SecondsToAverage = 0;
+
+  DistanceUnits = 211;
+  TotalSeconds = ((HoursIn * 60) + MinutesIn) * 60;
+  Average = ConvertSeconds(TotalSeconds / 42.2);
+  FadeDeduction = 42 - FadeDistance;
+  SecondsDeducted = (FadeSecondsIn * FadeDeduction) + (FadeSecondsIn / 5);
+  SecondsToAverage = TotalSeconds - SecondsDeducted;
+  PreFadeSecs = (SecondsToAverage / DistanceUnits) * 5;
+  PostFadeSecs = PreFadeSecs + FadeSecondsIn;
+
+  TimeChoice = new Array();
+  for(x = 0; x < FadeDistance; x++)
+    {
+    TimeChoice[x] = PreFadeSecs;
+    }
+  for(y = FadeDistance; y < 42; y++)
+    {
+    TimeChoice[y] = PostFadeSecs;
+    }
+
+  SplitSeconds = new Array();
+  SplitLong = new Array();
+  Split = new Array();
+
+  SplitSeconds[0] = TimeChoice[0];
+  SplitLong[0] = SplitSeconds[0];
+  Split[0] = ConvertSeconds(SplitLong[0]);
+  for(x = 1; x < 42; x++)
+    {
+    SplitSeconds[x] = SplitSeconds[x - 1] + TimeChoice[x];
+    SplitLong[x] = SplitSeconds[x];
+    Split[x] = ConvertSeconds(SplitLong[x]);
+    }
+
+  ExtraLong = SplitLong[41] + (TimeChoice[41] / 5);
+  ExtraPointTwo = ConvertSeconds(ExtraLong);
+  HalfLong = (SplitLong[20] + (TimeChoice[20] / 10));
+  HalfSplit = ConvertSeconds(HalfLong);
+  PreConvert = ConvertSeconds(PreFadeSecs);
+  PostConvert = ConvertSeconds(PostFadeSecs);
+  FillTable();
+  }
+
+function CalculatePCSeconds() 
+  {
+  var HoursIn = document.calculator.TargetHours.value-0;
+  var MinutesIn = document.calculator.TargetMinutes.value-0;
+  var FadePerCent = document.calculator.TargetFade.value-0;
+  var FadeDistance = document.calculator.FadeFrom.value-0;
+
+  DistanceUnits = 211;
+  TotalSeconds = ((HoursIn * 60) + MinutesIn) * 60;
+  Average = ConvertSeconds(TotalSeconds / 42.2);
+  PostFadePercentage = 100 + FadePerCent;
+  if (FadeDistance == 0)
+    {
+    FadeDistance = 42.2;
+    }
+  PreFadeUnits = FadeDistance * 500;
+  PostFadeUnits = (DistanceUnits - (FadeDistance * 5)) * PostFadePercentage;
+  PercentageUnits = PreFadeUnits + PostFadeUnits;
+  SecondUnits = TotalSeconds / PercentageUnits;
+  PreFadeSecs = (SecondUnits * 100) * 5;
+  PostFadeSecs = (SecondUnits * (100 + FadePerCent)) * 5;
+
+  KmSeconds = new Array();
+  for(x = 0; x < FadeDistance; x++)
+    {
+    KmSeconds[x] = (SecondUnits * 100) * 5;
+    }
+  for(y = FadeDistance; y < 42; y++)
+    {
+    KmSeconds[y] = (SecondUnits * (100 + FadePerCent)) * 5;
+    }
+
+  SplitSeconds = new Array();
+  SplitLong = new Array();
+  Split = new Array();
+  SplitSeconds[0] = KmSeconds[0];
+  SplitLong[0] = SplitSeconds[0];
+  Split[0] = ConvertSeconds(SplitLong[0]);
+  for(x = 1; x < 42; x++)
+    {
+    SplitSeconds[x] = SplitSeconds[x - 1] + KmSeconds[x];
+    SplitLong[x] = SplitSeconds[x];
+    Split[x] = ConvertSeconds(SplitLong[x]);
+    }
+
+  ExtraLong = SplitLong[41] + (KmSeconds[41] / 5);
+  ExtraPointTwo = ConvertSeconds(ExtraLong);
+  HalfLong = (SplitLong[20] + (KmSeconds[20] / 10));
+  HalfSplit = ConvertSeconds(HalfLong);
+  PreConvert = ConvertSeconds(PreFadeSecs);
+  PostConvert = ConvertSeconds(PostFadeSecs);
+  FillTable();
+  } 
+
+function CalculateTime()
+  {
+  var TargetMinutes = document.calculator.XTargetMinutes.value-0;
+  var TargetSeconds = document.calculator.XTargetSeconds.value-0;
+  var TargetFadeMinutes = document.calculator.XTargetFadeMinutes.value-0;
+  var TargetFadeSeconds = document.calculator.XTargetFadeSeconds.value-0;
+  var FadeDistance = document.calculator.XFadeFrom.value-0; 
+
+  var PreFadeSecPerKm = 0, FadeSecPerKM = 0, DistanceUnits = 0;
+  var PostFadeDistanceUnits = 0;
+ 
+  PreFadeSecPerKm = (TargetMinutes * 60) + TargetSeconds;
+  FadeSecPerKm = (TargetFadeMinutes * 60) + TargetFadeSeconds;
+  if (FadeDistance == 0)
+    {
+    FadeSecPerKm = PreFadeSecPerKm;
+    }
+  DistanceUnits = FadeDistance * 5;
+  PostFadeDistanceUnits = 211 - (FadeDistance * 5);
+  PreFadeSeconds = (PreFadeSecPerKm * DistanceUnits) / 5;
+  PostFadeSeconds = (FadeSecPerKm * PostFadeDistanceUnits) / 5;
+  TotalSeconds = PreFadeSeconds + PostFadeSeconds;
+  Average = ConvertSeconds(TotalSeconds / 42.2);
+
+  TimeChoice = new Array();
+  for(x = 0; x < FadeDistance; x++)
+    {
+    TimeChoice[x] = PreFadeSecPerKm;
+    }
+  for(y = FadeDistance; y < 42; y++)
+    {
+    TimeChoice[y] = FadeSecPerKm;
+    }
+
+  SplitSeconds = new Array();
+  SplitLong = new Array();
+  Split = new Array();
+
+  SplitSeconds[0] = TimeChoice[0];
+  SplitLong[0] = SplitSeconds[0];
+  Split[0] = ConvertSeconds(SplitLong[0]);
+  for(x = 1; x < 42; x++)
+    {
+    SplitSeconds[x] = SplitSeconds[x - 1] + TimeChoice[x];
+    SplitLong[x] = SplitSeconds[x];
+    Split[x] = ConvertSeconds(SplitLong[x]);
+    }
+
+  ExtraLong = SplitLong[41] + (TimeChoice[41] / 5);
+  ExtraPointTwo = ConvertSeconds(ExtraLong);
+  HalfLong = (SplitLong[20] + (TimeChoice[20] / 10));
+  HalfSplit = ConvertSeconds(HalfLong);
+  PreConvert = ConvertSeconds(PreFadeSecPerKm);
+  PostConvert = ConvertSeconds(FadeSecPerKm);
+  FillTable();
+  }
+
+
+
+function FillTable()
+  {
+  document.calculator.Split1.value = Split[0];
+  document.calculator.Split2.value = Split[1];
+  document.calculator.Split3.value = Split[2];
+  document.calculator.Split4.value = Split[3];
+  document.calculator.Split5.value = Split[4];
+  document.calculator.Split6.value = Split[5];
+  document.calculator.Split7.value = Split[6];
+  document.calculator.Split8.value = Split[7];
+  document.calculator.Split9.value = Split[8];
+  document.calculator.Split10.value = Split[9];
+  document.calculator.Split11.value = Split[10];
+  document.calculator.Split12.value = Split[11];
+  document.calculator.Split13.value = Split[12];
+  document.calculator.Split14.value = Split[13];
+  document.calculator.Split15.value = Split[14];
+  document.calculator.Split16.value = Split[15];
+  document.calculator.Split17.value = Split[16];
+  document.calculator.Split18.value = Split[17];
+  document.calculator.Split19.value = Split[18];
+  document.calculator.Split20.value = Split[19];
+  document.calculator.Split21.value = Split[20];
+  document.calculator.Split22.value = Split[21];
+  document.calculator.Split23.value = Split[22];
+  document.calculator.Split24.value = Split[23];
+  document.calculator.Split25.value = Split[24];
+  document.calculator.Split26.value = Split[25];
+  document.calculator.Split27.value = Split[26];
+  document.calculator.Split28.value = Split[27];
+  document.calculator.Split29.value = Split[28];
+  document.calculator.Split30.value = Split[29];
+  document.calculator.Split31.value = Split[30];
+  document.calculator.Split32.value = Split[31];
+  document.calculator.Split33.value = Split[32];
+  document.calculator.Split34.value = Split[33];
+  document.calculator.Split35.value = Split[34];
+  document.calculator.Split36.value = Split[35];
+  document.calculator.Split37.value = Split[36];
+  document.calculator.Split38.value = Split[37];
+  document.calculator.Split39.value = Split[38];
+  document.calculator.Split40.value = Split[39];
+  document.calculator.Split41.value = Split[40];
+  document.calculator.Split42.value = Split[41];
+  document.calculator.SplitAverage.value = Average;
+  document.calculator.PreFadeAverage.value = PreConvert;
+  document.calculator.PostFadeAverage.value = PostConvert;
+  document.calculator.SplitHalf.value = HalfSplit;
+  document.calculator.Split422.value = ExtraPointTwo;
+  }
+
+function RadioClick(RadioIn)
+  {
+  RadioAnswer = RadioIn;
+  }
+
+function CheckCalcType()
+  {
+  var XTimeInput = document.calculator.XTargetMinutes.value-0;
+  var TimeInput = document.calculator.TargetHours.value-0;
+  if ((XTimeInput > 0) && (TimeInput > 0))
+    {
+    alert("You've confused me!! Please enter only one of TARGET PACE or TARGET TIME.")
+    XTimeInput = 0;
+    RadioAnswer = 5;
+    }
+  if (XTimeInput > 0)
+    {
+   CalculateTime();
+    } 
+    else
+    if (RadioAnswer == 0)
+      {
+      CalculateKmSeconds();
+      }
+    else
+    if (RadioAnswer == 1)
+      {
+      CalculatePCSeconds();
+      }
+  }
+
+
+// end of script -->
+</script>
+
+<!-- BEGIN WAYBACK TOOLBAR INSERT -->
+<script>__wm.rw(0);</script>
+</head><body link="AQUA" vlink="PINK">
+  
+<script type="text/javascript" src="./Marathon pace calculator_files/f.txt">
+</script>
+ 
+
+<title>Marathon pace calculator</title>
+
+<center>
+  <form name="calculator">
+
+    <!--<table>
+    <tbody><tr>   
+      <td>
+ 
+
+<table bgcolor="orange" cellpadding="5" width="70%">
+  <tbody><tr>
+    <td>
+      <table cellspacing="0">
+      <tbody><tr>
+        <td class="reverse">
+        &nbsp;&nbsp;<a href="http://web.archive.org/web/20160119184017/http://www.users.on.net/~klima/rkcalc_mi.htm">splits&nbsp;for&nbsp;26.2&nbsp;miles</a>&nbsp;&nbsp;
+        </td>
+      </tr>
+    <tr><td><p style="font-family: sans-serif; font-size: 1pt">&nbsp;</p></td></tr>
+      <tr>
+        <td class="reverse">
+        &nbsp;&nbsp;<a href="http://web.archive.org/web/20160119184017/http://www.users.on.net/~klima/rkcalc_hkm.htm">splits&nbsp;for&nbsp;21.1km</a>&nbsp;&nbsp;
+        </td>
+      </tr>
+      
+    <tr><td><p style="font-family: sans-serif; font-size: 1pt">&nbsp;</p></td></tr>
+      <tr>
+        <td class="reverse">
+        &nbsp;&nbsp;<a href="http://web.archive.org/web/20160119184017/http://www.users.on.net/~klima/rkcalc_hmi.htm">splits&nbsp;for&nbsp;13.1&nbsp;miles</a>&nbsp;&nbsp;
+        </td>
+      </tr>
+      
+    <tr><td><p style="font-family: sans-serif; font-size: 1pt">&nbsp;</p></td></tr>
+      <tr>
+        <td class="reverse">
+        &nbsp;&nbsp;<a href="http://web.archive.org/web/20160119184017/http://www.users.on.net/~klima/rkcalc_home.htm">Back&nbsp;to&nbsp;home&nbsp;page</a>&nbsp;&nbsp;
+        </td>
+      </tr>
+
+      </tbody></table>
+    </td>
+    <td>
+     <table bgcolor="orange">
+      <tbody><tr>
+        <td>
+        <p class="marhed1">
+        Marathon
+        </p>
+        </td>
+       <td>
+        <p class="marhed2">
+        <br>
+        pace&nbsp;&nbsp;chart&nbsp;&nbsp;&nbsp;&nbsp;
+        </p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+        <p class="marhed3">
+        allowing you to make adjustment for fade
+        </p></td>
+      </tr>
+      </tbody></table>
+    </td>
+  </tr>
+</tbody></table>
+      </td>
+    </tr>
+    </tbody></table>-->
+    <br>
+    <p class="sans3">ENTER TARGET RACE PACE</p>
+    <table>
+      <tbody><tr>
+        <td class="input"><input type="TEXT" name="XTargetMinutes" value="" size="2" maxlength="2"></td>
+        <td class="sans2">min</td>
+        <td class="input"><input type="TEXT" name="XTargetSeconds" value="" size="2" maxlength="2"></td>
+        <td class="sans2">sec per km</td>
+      </tr>
+    </tbody></table>
+    <table>
+      <tbody><tr>
+        <td class="sans2">with optional allowance for slowing to:</td>
+      </tr>
+    </tbody></table>
+    <table>
+      <tbody><tr>
+        <td class="input"><input type="TEXT" name="XTargetFadeMinutes" value="" size="2" maxlength="2"></td>
+        <td class="sans2">min</td>
+        <td class="input"><input type="TEXT" name="XTargetFadeSeconds" value="" size="2" maxlength="2"></td>
+        <td class="sans2">sec per km from</td>
+        <td class="input"><input type="TEXT" name="XFadeFrom" value="" size="2" maxlength="2"></td>
+        <td class="sans2">km</td>
+      </tr>
+    </tbody></table>
+    <p class="sans4">-- OR --</p>    
+    <p class="sans3">ENTER TARGET RACE TIME</p>
+    <table>
+      <tbody><tr>
+        <td><p class="sans2">Hours:</p></td>
+        <td class="input"><input type="TEXT" name="TargetHours" value="" size="2" maxlength="2" <="" td="">
+        </td><td><p class="sans2">Minutes:</p></td>
+        <td class="input"><input type="TEXT" name="TargetMinutes" value="" size="2" maxlength="2" <="" td="">
+      </td></tr>
+    </tbody></table>
+    <table>
+      <tbody><tr>
+        <td><p class="sans2">Allow fade of</p></td>
+        <td class="input"><input type="TEXT" name="TargetFade" value="" size="2" maxlength="3" <="" td="">
+
+        </td><td class="sans2">
+            <input type="RADIO" name="FadeType" value="" size="1" onclick="RadioClick(0)" checked="">seconds per km<br>
+            <input type="RADIO" name="FadeType" value="" size="1" onclick="RadioClick(1)">per cent</td>
+
+        <td><p class="sans2">&nbsp;&nbsp;&nbsp;from</p></td>
+        <td class="input"><input type="TEXT" name="FadeFrom" value="" size="2" maxlength="2" <="" td="">
+        </td><td><p class="sans2">km</p></td>
+      </tr>
+    </tbody></table>
+    <table align="CENTER">
+      <tbody><tr>
+        <td><input type="BUTTON" name="CalcButton" value="  Calculate now  " onclick="CheckCalcType()" <="" td="">
+        </td><td><input type="RESET" name="reset" value="Reset calculator" size="10"></td>
+      </tr>
+    </tbody></table>
+  
+
+  <table bgcolor="WHITE" cellspacing="0" cellpadding="4" border="1">
+  <tbody><tr>
+    <td background="./Marathon pace calculator_files/blubg01.jpg"><b>Overall pace:
+      <input type="TEXT" name="SplitAverage" value="" size="8">
+    </b></td>
+    <td background="./Marathon pace calculator_files/blubg01.jpg"><b>Pre-fade pace:
+      <input type="TEXT" name="PreFadeAverage" value="" size="8">
+    </b></td>
+    <td background="./Marathon pace calculator_files/blubg01.jpg"><b>Post-fade pace:
+      <input type="TEXT" name="PostFadeAverage" value="" size="8">
+    </b></td>
+  </tr>
+  </tbody></table>
+
+  <table bgcolor="WHITE" cellspacing="0" cellpadding="4" border="1">
+  <tbody><tr>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      &nbsp;&nbsp;1:</font> <input type="TEXT" name="Split1" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      &nbsp;&nbsp;2:</font> <input type="TEXT" name="Split2" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      &nbsp;&nbsp;3:</font> <input type="TEXT" name="Split3" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      &nbsp;&nbsp;4:</font> <input type="TEXT" name="Split4" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/purbg01.jpg"><font size="4" weight="BOLD">
+      &nbsp;&nbsp;5Km:</font> <input type="TEXT" name="Split5" value="" size="8">
+    </td>
+  </tr>
+  <tr>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      &nbsp;&nbsp;6:</font> <input type="TEXT" name="Split6" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      &nbsp;&nbsp;7:</font> <input type="TEXT" name="Split7" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      &nbsp;&nbsp;8:</font> <input type="TEXT" name="Split8" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      &nbsp;&nbsp;9:</font> <input type="TEXT" name="Split9" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/purbg01.jpg"><font size="4" weight="BOLD">
+      10Km:</font> <input type="TEXT" name="Split10" value="" size="8">
+     </td>
+  </tr>
+  <tr>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      11:</font> <input type="TEXT" name="Split11" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      12:</font> <input type="TEXT" name="Split12" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg" v=""><font size="4" weight="BOLD">
+      13:</font> <input type="TEXT" name="Split13" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      14:</font> <input type="TEXT" name="Split14" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/purbg01.jpg"><font size="4" weight="BOLD">
+      15Km:</font> <input type="TEXT" name="Split15" value="" size="8">
+    </td>
+  </tr>
+  <tr>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      16:</font> <input type="TEXT" name="Split16" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      17:</font> <input type="TEXT" name="Split17" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      18:</font> <input type="TEXT" name="Split18" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      19:</font> <input type="TEXT" name="Split19" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/purbg01.jpg"><font size="4" weight="BOLD">
+      20Km:</font> <input type="TEXT" name="Split20" value="" size="8">
+    </td>
+  </tr>
+  <tr>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      21:</font> <input type="TEXT" name="Split21" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      22:</font> <input type="TEXT" name="Split22" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      23:</font> <input type="TEXT" name="Split23" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      24:</font> <input type="TEXT" name="Split24" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/purbg01.jpg"><font size="4" weight="BOLD">
+      25Km:</font> <input type="TEXT" name="Split25" value="" size="8">
+    </td>
+  </tr>
+  <tr>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      26:</font> <input type="TEXT" name="Split26" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      27:</font> <input type="TEXT" name="Split27" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      28:</font> <input type="TEXT" name="Split28" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+     29:</font> <input type="TEXT" name="Split29" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/purbg01.jpg"><font size="4" weight="BOLD">
+      30Km:</font> <input type="TEXT" name="Split30" value="" size="8">
+    </td>
+  </tr>
+  <tr>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      31:</font> <input type="TEXT" name="Split31" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      32:</font> <input type="TEXT" name="Split32" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      33:</font> <input type="TEXT" name="Split33" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      34:</font> <input type="TEXT" name="Split34" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/purbg01.jpg"><font size="4" weight="BOLD">
+      35Km:</font> <input type="TEXT" name="Split35" value="" size="8">
+    </td>
+  </tr>
+
+  <tr>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      36:</font> <input type="TEXT" name="Split36" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      37:</font> <input type="TEXT" name="Split37" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      38:</font> <input type="TEXT" name="Split38" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+      39:</font> <input type="TEXT" name="Split39" value="" size="8">
+    </td>
+    <td background="./Marathon pace calculator_files/purbg01.jpg"><font size="4" weight="BOLD">
+      40Km:</font> <input type="TEXT" name="Split40" value="" size="8">
+    </td>
+  </tr>
+  </tbody></table>
+
+  <table bgcolor="WHITE" cellspacing="0" cellpadding="4" border="1">  
+    <tbody><tr>
+     <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+       41:</font> <input type="TEXT" name="Split41" value="" size="8">
+     </td>
+     <td background="./Marathon pace calculator_files/yelbg01.jpg"><font size="4" weight="BOLD">
+       42:</font> <input type="TEXT" name="Split42" value="" size="8">
+     </td>
+   </tr>
+  </tbody></table>
+
+
+  <table bgcolor="WHITE" cellspacing="0" cellpadding="4" border="1">
+  <tbody><tr>
+    <td background="./Marathon pace calculator_files/blubg01.jpg"><b>Half-marathon split:
+      <input type="TEXT" name="SplitHalf" value="" size="8">
+    </b></td>
+    <td background="./Marathon pace calculator_files/blubg01.jpg"><b>Calculated overall time:
+      <input type="TEXT" name="Split422" value="" size="8">
+    </b></td>
+  </tr>
+  </tbody></table>
+  </form>
+
+  <!--<table>
+  <tbody><tr>
+    <td class="reverse">
+      &nbsp;&nbsp;<a href="http://web.archive.org/web/20160119184017/http://www.users.on.net/~klima/rkcalc_mi.htm">splits&nbsp;for&nbsp;26.2&nbsp;miles</a>&nbsp;&nbsp;
+    </td>
+    <td>&nbsp;</td>
+    <td class="reverse">
+      &nbsp;&nbsp;<a href="http://web.archive.org/web/20160119184017/http://www.users.on.net/~klima/rkcalc_hkm.htm">splits&nbsp;for&nbsp;21.1km</a>&nbsp;&nbsp;
+    </td>
+    <td>&nbsp;</td>
+    <td class="reverse">
+      &nbsp;&nbsp;<a href="http://web.archive.org/web/20160119184017/http://www.users.on.net/~klima/rkcalc_hmi.htm">splits&nbsp;for&nbsp;13.1&nbsp;miles</a>&nbsp;&nbsp;
+    </td>
+    <td>&nbsp;</td>
+    <td class="reverse">
+      &nbsp;&nbsp;<a href="http://web.archive.org/web/20160119184017/http://www.users.on.net/~klima/rkcalc_home.htm">Back&nbsp;to&nbsp;home&nbsp;page</a>&nbsp;&nbsp;
+    </td>
+  </tr>
+  </tbody></table>-->
+<!--
+  <p align="CENTER"><font size="2">
+    COPYRIGHT� <a href="http://web.archive.org/web/20160119184017/mailto:rob_klima@hotmail.com">Rob Klima</a>, 1999-2002<br><br>
+  -->
+</body></html>
