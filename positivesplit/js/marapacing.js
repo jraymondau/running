@@ -52,7 +52,7 @@ $(document).ready(function(){
         // get using seconds
         var totalSecs = h + m;
     
-        if($('#distance').val() != 0 && $('#hours').val() != 0 && $('#mins').val() != 0){
+        if($('#distance').val() != 0 && ($('#hours').val() + $('#mins').val() != 0)){
             
             var avgPace = ((totalSecs/dist)/60);
             //todo prefade pace
